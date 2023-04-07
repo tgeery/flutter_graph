@@ -55,6 +55,10 @@ class CountPerMonthChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<double> d = [1, 3, 2, 1, 1, 2, 3, 3, 4, 2, 2, 3];
+    List<FlSpot> dataSpots = [];
+    d.asMap().forEach((i,v) => dataSpots.add(FlSpot(i+1, v)));
+
     return LineChart(
       LineChartData(
         lineTouchData: GraphLine(),
@@ -74,30 +78,7 @@ class CountPerMonthChart extends StatelessWidget {
             top: BorderSide(color: Colors.transparent),
           ),
         ),
-        lineBarsData: [
-          LineChartBarData(
-            isCurved: false,
-            color: Colors.black,
-            barWidth: 5,
-            isStrokeCapRound: false,
-            dotData: FlDotData(show: false),
-            belowBarData: BarAreaData(show: false),
-            spots: const [
-              FlSpot(1, 1),
-              FlSpot(2, 3),
-              FlSpot(3, 2),
-              FlSpot(4, 1),
-              FlSpot(5, 1),
-              FlSpot(6, 2),
-              FlSpot(7, 3),
-              FlSpot(8, 3),
-              FlSpot(9, 4),
-              FlSpot(10, 2),
-              FlSpot(11, 2),
-              FlSpot(12, 3),
-            ],
-          )
-        ],
+        lineBarsData: [GraphData(dataSpots: dataSpots)],
         minX: xMin,
         maxX: xMax,
         maxY: yMax,
@@ -109,19 +90,19 @@ class CountPerMonthChart extends StatelessWidget {
 
 class GraphLine extends LineTouchData {
   GraphLine({tooltipTextColor = Colors.white,
-             tooltipBgColor = Colors.black
-            }) : super(
-              handleBuiltInTouches: true,
-              touchTooltipData: LineTouchTooltipData(
-                getTooltipItems: (touchedSpots) {
-                  return touchedSpots.map((LineBarSpot touchedSpot) {
-                    var textStyle = TextStyle(color: tooltipTextColor);
-                    return LineTooltipItem(touchedSpot.y.toString(), textStyle);
-                  }).toList();
-                },
-                tooltipBgColor: tooltipBgColor,
-              )
-            );
+    tooltipBgColor = Colors.black
+  }) : super(
+    handleBuiltInTouches: true,
+    touchTooltipData: LineTouchTooltipData(
+      getTooltipItems: (touchedSpots) {
+        return touchedSpots.map((LineBarSpot touchedSpot) {
+          var textStyle = TextStyle(color: tooltipTextColor);
+          return LineTooltipItem(touchedSpot.y.toString(), textStyle);
+        }).toList();
+      },
+      tooltipBgColor: tooltipBgColor,
+    )
+  );
 }
 
 class GraphAxis extends AxisTitles {  
@@ -155,5 +136,17 @@ Widget monthTitle(double value, TitleMeta meta) {
     axisSide: meta.axisSide,
     space: 10,
     child: txt,
+  );
+}
+
+class GraphData extends LineChartBarData {
+  GraphData({dataSpots = const [], color = Colors.black, sz = 5}) : super(
+    isCurved: false,
+    color: color,
+    barWidth: sz,
+    isStrokeCapRound: false,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: dataSpots,
   );
 }
