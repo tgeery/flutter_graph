@@ -37,7 +37,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: CountPerMonthChart()
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(child: CountPerMonthChart()),
+          SliverList(),
+        ]
+      )
     );
   }
 }
@@ -48,10 +53,6 @@ class CountPerMonthChart extends StatelessWidget {
   double xMin = 0;
   double xMax = 13;
   CountPerMonthChart();
-
-  Widget countTitle(double value, TitleMeta meta) {
-    return SideTitleWidget(axisSide: meta.axisSide, space: 10, child: Text(value.toString()));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +138,10 @@ Widget monthTitle(double value, TitleMeta meta) {
     space: 10,
     child: txt,
   );
+}
+
+Widget countTitle(double value, TitleMeta meta) {
+  return SideTitleWidget(axisSide: meta.axisSide, space: 10, child: Text(value.toString()));
 }
 
 class GraphData extends LineChartBarData {
